@@ -1,25 +1,18 @@
 # movie-slicer
+forked from leader22/movie-slicer
 
-![MovieSlicer](./assets/img/app.png)
 
-## Usage
+## Additional function
 
-- Drop your video
-- Select ranges to slice with preview
-- Slice it!
+- WindowsSupport
+- Additional Buttons
+ 1. TwitterApp MovieGif(Limit 500MB)
+ 2. Crop mp4
+ 3. Slack Icon MovieGif(Limit 128KB 120px,120px)
 
-## Limitations
-- Output codecs are limited
-  - video: H.264
-  - audio: AAC
+![MovieSlicer](./assets/img/2019-06-03%2000_54_04-MovieSlicer.png)
 
-## Build
-```
-npm run build
-npm run package:mac # or build your own
-```
-
-### Requirements
-
-- `ffmpeg` and `ffprobe`
-  - with `--enable-gpl --enable-libx264 --enable-libfdk-aac`
+- Example: Crop mp4 And MovieGif 
+![SplitMovieAndMovieGif](./assets/img/kirby-dance-0.gif)
+![SplitMovieAndMovieGif](./assets/img/kirby-dance-1.gif)
+![SplitMovieAndMovieGif](./assets/img/kirby-dance-2.gif)
