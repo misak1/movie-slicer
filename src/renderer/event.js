@@ -1,5 +1,7 @@
 import { execCommand } from './util/ipc';
 import { shell, remote } from 'electron';
+import path from 'path';
+import timestamp from 'time-stamp';
 
 class Event {
   constructor(store) {
@@ -17,9 +19,9 @@ class Event {
         input: file.path,
       });
       probeInfo = JSON.parse(probeRes);
-    } catch(err) {
+    } catch (err) {
       console.error(err);
-      remote.dialog.showErrorBox('Error', 'Open devtools for more detail.');
+      // remote.dialog.showErrorBox('Error', 'Open devtools for more detail.');
       return;
     }
 
@@ -28,7 +30,9 @@ class Event {
 
     if (movie.duration < timeline.selectingSec) {
       // value is not a problem
-      timeline.selectingSec = movie.duration / 2;
+      // timeline.selectingSec = movie.duration / 2;
+      // 短い動画を読み込んだ時の初期 動画長
+      timeline.selectingSec = movie.duration;
     }
   }
 
@@ -110,7 +114,7 @@ class Event {
     movie.afProbe = {};
 
     const outputName = `${timeline.selectStartSec}-${timeline.selectStartSec + timeline.selectingSec}.mp4`;
-    const output = `${settings.outputDir}/${outputName}`;
+    const output = path.normalize(`${settings.outputDir}/${outputName}`);
 
     try {
       await execCommand('cmd:ffmpeg-slice', {
@@ -121,7 +125,7 @@ class Event {
         preset: settings.preset,
         output,
       });
-    } catch(err) {
+    } catch (err) {
       console.error(err);
       remote.dialog.showErrorBox('Error', 'Open devtools for more detail.');
       return;
@@ -133,7 +137,7 @@ class Event {
         input: output,
       });
       probeInfo = JSON.parse(probeRes);
-    } catch(err) {
+    } catch (err) {
       console.error(err);
       remote.dialog.showErrorBox('Error', 'Open devtools for more detail.');
       return;
@@ -145,13 +149,14 @@ class Event {
   }
 
   saveSnapshot() {
+
     const { timeline, movie, settings } = this._store;
 
     if (!movie.hasBfFile) {
       return;
     }
 
-    const outputName = `${timeline.selectStartSec}.png`;
+    const outputName = `${timeline.selectStartSec}.gif`;
     const output = `${settings.outputDir}/${outputName}`;
 
     // do not need to await for taking snapshot
@@ -160,14 +165,112 @@ class Event {
       input: movie.bfPath,
       output,
     })
-    .then(() => {
-      shell.showItemInFolder(output);
-    })
-    .catch(err => {
-      console.error(err);
-      remote.dialog.showErrorBox('Error', 'Open devtools for more detail.');
+      .then(() => {
+        shell.showItemInFolder(output);
+      })
+      .catch(err => {
+        console.error(err);
+        remote.dialog.showErrorBox('Error', 'Open devtools for more detail.');
+        return;
+      });
+  }
+
+  convertGif() {
+    const { timeline, movie, settings } = this._store;
+
+    if (!movie.hasBfFile) {
       return;
-    });
+    }
+    let count = settings.gifSplit;
+
+    const date = timestamp('YYYYMMDD_HHmmss');
+    const outputName = `${date}.gif`;
+    const output = `${settings.outputDir}/${outputName}`;
+
+    // do not need to await for taking snapshot
+    execCommand('cmd:ffmpeg-convert-gif', {
+      startSec: movie.currentTimeDisp,
+      input: movie.bfPath,
+      output,
+    })
+      .then(() => {
+        shell.showItemInFolder(output);
+      })
+      .catch(err => {
+        console.error(err);
+        remote.dialog.showErrorBox('Error', 'Open devtools for more detail.');
+        return;
+      });
+
+  }
+
+  cropGif() {
+    const { timeline, movie, settings } = this._store;
+
+    if (!movie.hasBfFile) {
+      return;
+    }
+    const gifSplit = settings.gifSplit;
+    let count = settings.gifSplit;
+    for (let i = 0; i < count; i++) {
+
+      const date = timestamp('YYYYMMDD_HHmmss');
+      const outputName = `${date}-${i}.mp4`;
+      const output = `${settings.outputDir}/${outputName}`;
+
+      // do not need to await for taking snapshot
+      execCommand('cmd:ffmpeg-crop-gif', {
+        startSec: movie.currentTimeDisp,
+        input: movie.bfPath,
+        output,
+        gifSplit,
+        i,
+      })
+        .then(() => {
+          shell.showItemInFolder(output);
+        })
+        .catch(err => {
+          console.error(err);
+          remote.dialog.showErrorBox('Error', 'Open devtools for more detail.');
+          return;
+        });
+    }
+  }
+
+  toTwitterGif() {
+    const { timeline, movie, settings } = this._store;
+
+    if (!movie.hasBfFile) {
+      return;
+    }
+    const gifWidth = settings.gifWidth;
+    // let count = settings.gifSplit;
+    // for (let i = 0; i < count; i++) {
+
+      const date = timestamp('YYYYMMDD_HHmmss');
+      // const outputName = `${date}-${i}.mp4`;
+      const outputName = `${date}.gif`;
+      const output = `${settings.outputDir}/${outputName}`;
+
+      // do not need to await for taking snapshot
+      execCommand('cmd:ffmpeg-toTwitter-gif', {
+        startSec: timeline.selectStartSec,
+        input: movie.bfPath,
+        time: timeline.selectingSec,
+        frameRate: settings.frameRate,
+        preset: settings.preset,
+        output,
+        gifWidth,
+      })
+        .then(() => {
+          shell.showItemInFolder(output);
+        })
+        .catch(err => {
+          console.error(err);
+          remote.dialog.showErrorBox('Error', 'Open devtools for more detail.');
+          return;
+        });
+    // }
   }
 
   openUrl(url) {

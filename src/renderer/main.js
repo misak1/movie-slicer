@@ -9,6 +9,8 @@ import Store from './store';
 import Event from './event';
 import Root from './container/root';
 import { listenCommand } from './util/ipc';
+const { app } = require('electron').remote;
+const appDir = app.getPath('exe');
 
 const store = new Store({
   settings: {
@@ -22,9 +24,17 @@ if (process.env.NODE_ENV === 'development') {
   window.event = event;
 
   requestIdleCallback(() => {
-    event.loadFile({
-      path: '/Users/leader22/Sandbox/ffmpeg-test/mov.mp4',
-    });
+    if (process.env.NODE_ENV === 'development') {
+      event.loadFile({
+        // path: '/Users/leader22/Sandbox/ffmpeg-test/mov.mp4',
+        path: path.join(homedir(), 'sample.mp4'),
+      });
+    }else{
+        event.loadFile({
+          // path: '/Users/leader22/Sandbox/ffmpeg-test/mov.mp4',
+          path: path.join(appDir, 'sample.mp4'),
+        });
+    }
   });
 }
 
@@ -32,6 +42,9 @@ listenCommand('shortcut:openSettings', () => event.showSettings(true));
 listenCommand('shortcut:togglePause', () => event.togglePause());
 listenCommand('shortcut:clearFile', () => event.clearFile());
 listenCommand('shortcut:saveSnapshot', () => event.saveSnapshot());
+listenCommand('shortcut:convertGif', () => event.convertGif());
+listenCommand('shortcut:cropGif', () => event.cropGif());
+listenCommand('shortcut:toTwitter', () => event.toTwitterGif());
 listenCommand('shortcut:saveSlice', () => {
   event.showProgress(true);
   event.saveSlice();

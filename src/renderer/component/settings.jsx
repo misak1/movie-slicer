@@ -21,7 +21,7 @@ const Settings = ({
           <label className="Settings_Item">
             <span>Selecting sec(min): </span>
             <input
-              type="number"
+              type="number" min="0"
               value={settings.minSelectingSec}
               onChange={ev => onChangeSettings('minSelectingSec', ev.target.value)}
             />
@@ -31,7 +31,7 @@ const Settings = ({
           <label className="Settings_Item">
             <span>Selecting sec(max): </span>
             <input
-              type="number"
+              type="number" min="0"
               value={settings.maxSelectingSec}
               onChange={ev => onChangeSettings('maxSelectingSec', ev.target.value)}
             />
@@ -58,7 +58,7 @@ const Settings = ({
           <label className="Settings_Item">
             <span>Frame rate: </span>
             <input
-              type="number"
+              type="number" min="0"
               value={settings.frameRate}
               onChange={ev => onChangeSettings('frameRate', ev.target.value)}
             />
@@ -97,6 +97,37 @@ const Settings = ({
                 <option key={label} value={idx}>{label}</option>
               )) }
             </select>
+          </label>
+        </li>
+      </ul>
+    </div>
+    <div className="Settings_Section">
+      <SubHeading>Gif</SubHeading>
+      <ul>
+        <li>
+          <label className="Settings_Item">
+            <span>Width: </span>
+            <input
+              type="number" min="0"
+              value={settings.gifWidth}
+              onChange={ev => onChangeSettings('gifWidth', ev.target.value)}
+            />
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <div className="Settings_Section">
+      <SubHeading>Split</SubHeading>
+      <ul>
+        <li>
+          <label className="Settings_Item">
+            <span>SplitCount: </span>
+            <input
+              type="number" min="0"
+              value={settings.gifSplit}
+              onChange={ev => onChangeSettings('gifSplit', ev.target.value)}
+            />
           </label>
         </li>
       </ul>

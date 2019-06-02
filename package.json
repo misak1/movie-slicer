@@ -2,13 +2,17 @@
   "name": "movie-slicer",
   "version": "1.0.3",
   "description": "Slice your favorite scenes from movie file.",
-  "main": "./index.js",
+  "main": "main.js",
   "scripts": {
-    "start": "NODE_ENV=development electron .",
+    "start2": "NODE_ENV=development electron .",
+    "start": "electron .",
     "dev": "webpack --mode development -w",
     "build": "webpack --mode production",
     "lint": "eslint .",
-    "package:mac": "electron-packager ./ MovieSlicer --platform=darwin --arch=x64 --icon=./assets/app_icon/MovieSlicer.icns --overwrite --ignore=\"^/node_modules\" --ignore=\"^/assets\" --ignore=\"^/src/renderer\""
+    "zip": "del app.asar.unpacked.7z && .\\bin\\lib\\7z\\7za.exe a -t7z -m0=lzma2 -mx=9 -aoa -mmt=4 app.asar.unpacked.7z app.asar.unpacked",
+    "unzip": ".\\bin\\lib\\7z\\7za.exe x .\\app.asar.unpacked.7z",
+    "package:mac": "electron-packager ./ MovieSlicer --platform=darwin --arch=x64 --icon=./assets/app_icon/MovieSlicer.icns --overwrite --ignore=\"^/node_modules\" --ignore=\"^/assets\" --ignore=\"^/src/renderer\"",
+    "package:win": "electron-packager ./ MovieSlicer --platform=win32 --arch=x64 --icon=./assets/app_icon/MovieSlicer.ico --overwrite --ignore=\"^/assets\" --ignore=\"^/src/renderer\""
   },
   "keywords": [],
   "author": "leader22",
@@ -22,8 +26,9 @@
     "babel-eslint": "^8.2.2",
     "babel-loader": "^7.1.4",
     "babel-preset-react": "^6.24.1",
+    "cross-env": "^5.2.0",
     "electron": "^1.8.3",
-    "electron-packager": "^11.1.0",
+    "electron-builder": "^20.41.0",
     "electron-reloader": "^0.2.0",
     "eslint": "^4.18.2",
     "eslint-plugin-react": "^7.7.0",
@@ -31,13 +36,17 @@
     "webpack-cli": "^2.0.11"
   },
   "dependencies": {
+    "archiver": "^2.1.0",
+    "electron-commander": "file:local_modules/electron-commander",
     "fix-path": "^2.1.0",
+    "m-execsync": "^1.0.0",
     "mobx": "^4.0.0",
     "mobx-react": "^5.0.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-dropzone": "^4.2.9",
-    "react-rnd": "^7.3.0"
+    "react-rnd": "^7.3.0",
+    "time-stamp": "^2.2.0"
   },
   "babel": {
     "presets": [

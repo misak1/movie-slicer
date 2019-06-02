@@ -30,6 +30,7 @@ class Selector extends React.Component {
     const selectorDefaultWidth = ui.pxAs1Sec * timeline.selectingSec;
     const selectorMinWidth = ui.pxAs1Sec * settings.minSelectingSec;
     const selectorMaxWidth = ui.pxAs1Sec * settings.maxSelectingSec;
+    // const gifSplit = settings.gifSplit;
 
     return (
       <div

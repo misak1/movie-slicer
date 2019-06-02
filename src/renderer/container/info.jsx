@@ -26,6 +26,27 @@ const InfoContainer = ({ timeline, ui, event }) => (
         name="cut"
         disabled={ui.isSlicing}
       />
+      <Icon
+        onClick={() => {
+          event.toTwitterGif();
+        }}
+        name="gif"
+        // disabled={ui.isSlicing}
+      />
+      <Icon
+        onClick={() => {
+          event.cropGif();
+        }}
+        name="vertical-split"
+        // disabled={ui.isSlicing}
+      />
+      <Icon
+        onClick={() => {
+          event.convertGif();
+        }}
+        name="icon-text"
+        // disabled={ui.isSlicing}
+      />
     </div>
   </div>
 );

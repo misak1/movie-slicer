@@ -1,0 +1,1 @@
+app-forgroundのelectron向けラッパー

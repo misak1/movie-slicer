@@ -14,11 +14,13 @@ class SettingsStore {
       'veryslow',
     ];
 
-    this.minSelectingSec = 5;
+    this.minSelectingSec =5;
     this.maxSelectingSec = 140;
-    this.frameRate = 40;
+    this.frameRate = 10;
     this.presetIdx = 0;
     this.outputDir = outputDir;
+    this.gifWidth = 320;
+    this.gifSplit = 2;
   }
 
   get preset() {
@@ -33,5 +35,7 @@ decorate(SettingsStore, {
   presetIdx: observable,
   outputDir: observable,
   preset: computed,
+  gifWidth: observable,
+  gifSplit: observable,
 });
 export default SettingsStore;
